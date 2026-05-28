@@ -9,7 +9,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages, max_tokens } = req.body;
+    let body = req.body;
+    if (typeof body === "string") body = JSON.parse(body);
+
+    const { messages, max_tokens } = body;
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
