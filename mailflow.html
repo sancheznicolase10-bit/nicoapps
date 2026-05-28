@@ -618,7 +618,7 @@ function incrementUsage(appId) {
   localStorage.setItem(getUsageKey(appId), (getUsageCount(appId) + 1).toString());
 }
 function checkUsageLimit(appId) {
-  if (getUsageCount(appId) >= 3) {
+  if (getUsageCount(appId) >= 5) {
     alert('Llegaste al límite de 3 usos diarios gratuitos 🙌\nVolvé mañana para seguir usando la herramienta.\n\nSeguime en @nicosanchezok para más tools de IA gratuitas.');
     return false;
   }
