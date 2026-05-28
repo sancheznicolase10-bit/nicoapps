@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AutoReply IA — Atención al cliente automática</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --gold: #c8f04a;
+    --gold2: #a8d030;
+    --text: #f0f0f0;
+    --muted: rgba(240,240,240,0.45);
+    --muted2: rgba(240,240,240,0.25);
+    --wa: #25d366;
+    --ig: #e1306c;
+    --radius: 12px;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-display); min-height: 100vh; }
+
+  /* NOISE */
+  body::before {
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 1;
+  }
+
+  /* GLOW */
+  .glow { position: fixed; top: -200px; right: -200px; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,240,74,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0; }
+
+  /* LAYOUT */
+  .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* HEADER */
+  header { display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 0 48px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-icon { width: 32px; height: 32px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .logo-text { font-size: 15px; font-weight: 700; letter-spacing: 0.05em; }
+  .logo-text span { color: var(--gold); }
+  .badge { font-family: var(--font-mono); font-size: 10px; color: var(--gold);
+    border: 1px solid rgba(200,240,74,0.3); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.1em; }
+
+  /* HERO */
+  .hero { margin-bottom: 56px; }
+  .hero-tag { font-family: var(--font-mono); font-size: 11px; color: var(--gold);
+    letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 16px; }
+  .hero h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.02em; margin-bottom: 16px; }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero p { font-size: 16px; color: var(--muted); line-height: 1.65; max-width: 520px; }
+
+  /* STEPS */
+  .steps-row { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+  .step-pill { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border2);
+    color: var(--muted); transition: all 0.3s; }
+  .step-pill.active { background: var(--gold); color: #0d0d0d; border-color: var(--gold); font-weight: 500; }
+  .step-pill.done { border-color: rgba(200,240,74,0.3); color: var(--gold); }
+
+  /* CARDS */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 28px; margin-bottom: 20px; }
+  .card-title { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .card-title span { color: var(--gold); font-size: 16px; }
+
+  /* INPUTS */
+  label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.12em;
+    text-transform: uppercase; display: block; margin-bottom: 8px; }
+  input, textarea, select {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 8px; color: var(--text); font-family: var(--font-display); font-size: 15px;
+    padding: 14px 16px; outline: none; transition: border-color 0.2s; resize: vertical;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--gold); }
+  input::placeholder, textarea::placeholder { color: var(--muted2); }
+  .field { margin-bottom: 18px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* CHANNEL TOGGLE */
+  .channel-row { display: flex; gap: 10px; margin-bottom: 18px; }
+  .ch-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border2);
+    background: transparent; color: var(--muted); font-family: var(--font-display); font-size: 14px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center;
+    justify-content: center; gap: 8px; }
+  .ch-btn.wa.active { background: rgba(37,211,102,0.12); border-color: var(--wa); color: var(--wa); }
+  .ch-btn.ig.active { background: rgba(225,48,108,0.12); border-color: var(--ig); color: var(--ig); }
+  .ch-btn:not(.active):hover { border-color: var(--border2); opacity: 0.8; }
+
+  /* TONE ROW */
+  .tone-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .tone-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border2);
+    background: transparent; color: var(--muted); font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.08em; cursor: pointer; transition: all 0.2s; }
+  .tone-btn.active { background: rgba(200,240,74,0.1); border-color: var(--gold); color: var(--gold); }
+
+  /* FAQ LIST */
+  .faq-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .faq-item { display: grid; grid-template-columns: 1fr 1fr 36px; gap: 10px; align-items: start; }
+  .faq-item input { font-size: 14px; padding: 11px 14px; }
+  .faq-remove { width: 36px; height: 42px; background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border); border-radius: 8px; color: var(--muted);
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0; }
+  .faq-remove:hover { background: rgba(255,80,80,0.1); border-color: rgba(255,80,80,0.3); color: #ff5050; }
+  .faq-add { display: flex; align-items: center; gap: 8px; background: transparent;
+    border: 1px dashed var(--border2); border-radius: 8px; color: var(--muted);
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em;
+    padding: 11px 16px; cursor: pointer; width: 100%; transition: all 0.2s; }
+  .faq-add:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* BUTTONS */
+  .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--gold);
+    color: #0d0d0d; border: none; border-radius: 8px; padding: 16px 28px;
+    font-family: var(--font-display); font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.02em; }
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent;
+    border: 1px solid var(--border2); border-radius: 8px; padding: 14px 22px;
+    color: var(--muted); font-family: var(--font-display); font-size: 14px; cursor: pointer;
+    transition: all 0.2s; }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+  /* LOADING */
+  .loading { display: none; align-items: center; gap: 14px; padding: 20px 0; }
+  .loading.show { display: flex; }
+  .spinner { width: 20px; height: 20px; border: 2px solid rgba(200,240,74,0.2);
+    border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: var(--font-mono); font-size: 13px; color: var(--gold); }
+
+  /* RESULTS */
+  .results-section { display: none; }
+  .results-section.show { display: block; }
+  .result-header { display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: gap; gap: 12px; }
+  .result-header h2 { font-size: 20px; font-weight: 700; }
+  .result-count { font-family: var(--font-mono); font-size: 11px; color: var(--gold);
+    background: rgba(200,240,74,0.08); border: 1px solid rgba(200,240,74,0.2);
+    padding: 4px 12px; border-radius: 20px; }
+
+  /* RESPONSE CARDS */
+  .response-card { background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px; margin-bottom: 14px; transition: border-color 0.2s; }
+  .response-card:hover { border-color: var(--border2); }
+  .response-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .response-q { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; min-width: 200px; }
+  .ch-tag { font-family: var(--font-mono); font-size: 10px; padding: 3px 10px; border-radius: 20px;
+    font-weight: 500; letter-spacing: 0.08em; }
+  .ch-tag.wa { background: rgba(37,211,102,0.12); color: var(--wa); border: 1px solid rgba(37,211,102,0.2); }
+  .ch-tag.ig { background: rgba(225,48,108,0.12); color: var(--ig); border: 1px solid rgba(225,48,108,0.2); }
+  .tone-tag { font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; }
+  .response-text { font-size: 14px; line-height: 1.7; color: rgba(240,240,240,0.85);
+    background: var(--surface2); border-radius: 8px; padding: 16px; margin-bottom: 14px;
+    border-left: 3px solid var(--gold); white-space: pre-wrap; word-break: break-word; }
+  .copy-btn { display: inline-flex; align-items: center; gap: 6px; background: transparent;
+    border: 1px solid var(--border2); border-radius: 6px; padding: 8px 14px;
+    color: var(--muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    cursor: pointer; transition: all 0.2s; }
+  .copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .copy-btn.copied { border-color: var(--gold); color: var(--gold); background: rgba(200,240,74,0.08); }
+
+  /* EXPORT */
+  .export-bar { background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px; margin-top: 24px;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .export-info { font-size: 14px; color: var(--muted); }
+  .export-info strong { color: var(--text); }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .empty-icon { font-size: 36px; margin-bottom: 12px; }
+  .empty p { font-size: 14px; }
+
+  @media (max-width: 600px) {
+    .field-row { grid-template-columns: 1fr; }
+    .faq-item { grid-template-columns: 1fr 36px; }
+    .faq-item input:first-child { grid-column: 1 / -1; }
+  }
+</style>
+
+</head>
+<body>
+<div class="glow"></div>
+<div class="app">
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">Auto<span>Reply</span> IA</div>
+    </div>
+    <div class="badge">GRATIS · SIN REGISTRO</div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-tag">// Automatización de atención al cliente</div>
+    <h1>Respondé <em>más rápido</em><br/>con IA</h1>
+    <p>Cargá las preguntas frecuentes de tu negocio y generá respuestas profesionales listas para copiar en WhatsApp o Instagram.</p>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-row">
+    <div class="step-pill active" id="pill-1">01 · Tu negocio</div>
+    <div class="step-pill" id="pill-2">02 · Preguntas frecuentes</div>
+    <div class="step-pill" id="pill-3">03 · Respuestas listas</div>
+  </div>
+
+  <!-- STEP 1: NEGOCIO -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title"><span>◈</span> Contame sobre tu negocio</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Nombre del negocio</label>
+          <input id="bizName" type="text" placeholder="Ej: Ropa Colo, Estudio XYZ"/>
+        </div>
+        <div class="field">
+          <label>Rubro / industria</label>
+          <input id="bizRubro" type="text" placeholder="Ej: Indumentaria, Peluquería, Servicios"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>¿Qué vendés o hacés? (1-2 oraciones)</label>
+        <textarea id="bizDesc" rows="2" placeholder="Ej: Vendemos ropa deportiva para mujeres, envíos a todo el país. Precios desde $15.000."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Canal donde vas a usar las respuestas</label>
+        <div class="channel-row">
+          <button class="ch-btn wa active" id="chWa" onclick="setChannel('wa')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </button>
+          <button class="ch-btn ig" id="chIg" onclick="setChannel('ig')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            Instagram
+          </button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Tono de las respuestas</label>
+        <div class="tone-row">
+          <button class="tone-btn active" onclick="setTone(this,'profesional')">Profesional</button>
+          <button class="tone-btn" onclick="setTone(this,'amigable')">Amigable</button>
+          <button class="tone-btn" onclick="setTone(this,'informal')">Informal</button>
+          <button class="tone-btn" onclick="setTone(this,'formal')">Formal</button>
+          <button class="tone-btn" onclick="setTone(this,'entusiasta')">Entusiasta</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="goStep(2)">Siguiente → Cargar preguntas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: FAQs -->
+  <div id="step2" style="display:none">
+    <div class="card">
+      <div class="card-title"><span>◉</span> Preguntas frecuentes de tus clientes</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">
+        Escribí las preguntas que más te hacen. Podés dejar la respuesta en blanco y la IA la va a generar sola, o escribir una guía y la va a mejorar.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 36px;gap:10px;margin-bottom:8px;">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Pregunta del cliente</div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Tu respuesta base (opcional)</div>
+        <div></div>
+      </div>
+
+      <div class="faq-list" id="faqList"></div>
+
+      <button class="faq-add" onclick="addFaq()">
+        <span style="font-size:16px;">+</span> Agregar pregunta
+      </button>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="generateBtn" onclick="generate()">
+          ⚡ Generar respuestas con IA
+        </button>
+        <button class="btn-secondary" onclick="goStep(1)">← Volver</button>
+      </div>
+      <div class="loading" id="loadingDiv">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Generando respuestas...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULTS -->
+  <div id="step3" style="display:none">
+    <div class="results-section show">
+      <div class="result-header">
+        <h2>Respuestas listas ✓</h2>
+        <div class="result-count" id="resultCount">0 respuestas</div>
+      </div>
+      <div id="resultsContainer"></div>
+
+      <div class="export-bar">
+        <div class="export-info">
+          <strong>¿Querés exportar todo?</strong><br/>
+          <span>Descargá todas las respuestas en un archivo de texto</span>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="exportTxt()">↓ Descargar .txt</button>
+          <button class="btn-primary" onclick="goStep(2)">+ Generar más</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let channel = 'wa';
+  let tone = 'profesional';
+  let faqs = [];
+  let results = [];
+
+  // Init with 3 default FAQs
+  window.onload = () => {
+    addFaq('¿Cuánto tarda el envío?', '');
+    addFaq('¿Cuáles son los medios de pago?', '');
+    addFaq('¿Hacen cambios o devoluciones?', '');
+  };
+
+  function setChannel(ch) {
+    channel = ch;
+    document.getElementById('chWa').classList.toggle('active', ch === 'wa');
+    document.getElementById('chIg').classList.toggle('active', ch === 'ig');
+  }
+
+  function setTone(btn, t) {
+    tone = t;
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function addFaq(q = '', a = '') {
+    const id = Date.now() + Math.random();
+    faqs.push({ id, q, a });
+    renderFaqs();
+  }
+
+  function removeFaq(id) {
+    faqs = faqs.filter(f => f.id !== id);
+    renderFaqs();
+  }
+
+  function renderFaqs() {
+    const list = document.getElementById('faqList');
+    list.innerHTML = faqs.map(f => `
+      <div class="faq-item">
+        <input type="text" placeholder="¿Cuánto tarda el envío?" value="${escHtml(f.q)}"
+          oninput="updateFaq(${f.id}, 'q', this.value)"/>
+        <input type="text" placeholder="Respuesta base (opcional)" value="${escHtml(f.a)}"
+          oninput="updateFaq(${f.id}, 'a', this.value)"/>
+        <button class="faq-remove" onclick="removeFaq(${f.id})" title="Eliminar">×</button>
+      </div>
+    `).join('');
+  }
+
+  function updateFaq(id, field, val) {
+    const f = faqs.find(x => x.id === id);
+    if (f) f[field] = val;
+  }
+
+  function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function goStep(n) {
+    // Validate step 1
+    if (n === 2) {
+      const name = document.getElementById('bizName').value.trim();
+      const desc = document.getElementById('bizDesc').value.trim();
+      if (!name || !desc) {
+        alert('Completá el nombre y la descripción del negocio antes de continuar.');
+        return;
+      }
+    }
+    [1,2,3].forEach(i => {
+      document.getElementById('step'+i).style.display = i===n ? 'block' : 'none';
+      const pill = document.getElementById('pill-'+i);
+      pill.classList.toggle('active', i===n);
+      pill.classList.toggle('done', i<n);
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  async function generate() {
+  if (!checkUsageLimit('autoresponder')) return;
+  incrementUsage('autoresponder');
+
+    const validFaqs = faqs.filter(f => f.q.trim());
+    if (validFaqs.length === 0) {
+      alert('Agregá al menos una pregunta antes de generar.');
+      return;
+    }
+
+    const bizName = document.getElementById('bizName').value.trim();
+    const bizRubro = document.getElementById('bizRubro').value.trim();
+    const bizDesc = document.getElementById('bizDesc').value.trim();
+
+    const btn = document.getElementById('generateBtn');
+    const loading = document.getElementById('loadingDiv');
+    btn.disabled = true;
+    loading.classList.add('show');
+
+    const chName = channel === 'wa' ? 'WhatsApp' : 'Instagram DM';
+    const faqText = validFaqs.map((f,i) =>
+      `${i+1}. Pregunta: "${f.q}"${f.a ? `\n   Respuesta base del dueño: "${f.a}"` : ''}`
+    ).join('\n');
+
+    const loadingMsgs = [
+      'Analizando tu negocio...',
+      'Escribiendo respuestas...',
+      'Ajustando el tono...',
+      'Casi listo...'
+    ];
+    let li = 0;
+    const lt = setInterval(() => {
+      document.getElementById('loadingText').textContent = loadingMsgs[li % loadingMsgs.length];
+      li++;
+    }, 1800);
+
+    try {
+      const prompt = `Eres un experto en atención al cliente digital para negocios latinoamericanos.
+
+NEGOCIO:
+- Nombre: ${bizName}
+- Rubro: ${bizRubro || 'no especificado'}
+- Descripción: ${bizDesc}
+- Canal: ${chName}
+- Tono deseado: ${tone}
+
+PREGUNTAS FRECUENTES:
+${faqText}
+
+Tu tarea: Generá una respuesta profesional para CADA pregunta listada, optimizada para ${chName}.
+
+REGLAS IMPORTANTES:
+- Tono ${tone} — mantenerlo en todas las respuestas
+- Para WhatsApp: podés usar emojis con moderación (1-2 máximo), respuestas cálidas y directas
+- Para Instagram: podés usar emojis, lenguaje más visual y dinámico
+- Cada respuesta debe: saludar brevemente, responder con precisión, terminar con un CTA o apertura a continuar la conversación
+- Si hay respuesta base del dueño, mejorala y profesionalizala
+- Si no hay respuesta base, generala completa basándote en el contexto del negocio
+- Máximo 4-5 oraciones por respuesta — que sea concisa
+- Usá el nombre del negocio "${bizName}" cuando sea natural
+- NO incluyas aclaraciones tuyas, solo las respuestas listas para copiar
+
+Responde ÚNICAMENTE con JSON válido, sin markdown ni backticks:
+{
+  "respuestas": [
+    {"pregunta": "pregunta original", "respuesta": "respuesta lista para copiar"}
+  ]
+}`;
+
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          max_tokens: 1500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await res.json();
+      clearInterval(lt);
+
+      const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+      const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+      results = parsed.respuestas;
+
+      renderResults();
+      goStep(3);
+
+    } catch(e) {
+      clearInterval(lt);
+      alert('Algo salió mal. Revisá tu conexión e intentá de nuevo.');
+    } finally {
+      btn.disabled = false;
+      loading.classList.remove('show');
+    }
+  }
+
+  function renderResults() {
+    const container = document.getElementById('resultsContainer');
+    document.getElementById('resultCount').textContent = results.length + ' respuesta' + (results.length !== 1 ? 's' : '');
+
+    container.innerHTML = results.map((r, i) => `
+      <div class="response-card">
+        <div class="response-meta">
+          <div class="response-q">❓ ${escHtml(r.pregunta)}</div>
+          <span class="ch-tag ${channel}">${channel === 'wa' ? 'WhatsApp' : 'Instagram'}</span>
+          <span class="tone-tag">${tone}</span>
+        </div>
+        <div class="response-text" id="rt-${i}">${escHtml(r.respuesta)}</div>
+        <button class="copy-btn" id="cb-${i}" onclick="copyResponse(${i})">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copiar respuesta
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function copyResponse(i) {
+    const text = results[i].respuesta;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('cb-'+i);
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar respuesta`;
+      }, 2000);
+    });
+  }
+
+  function exportTxt() {
+    const bizName = document.getElementById('bizName').value.trim();
+    const chName = channel === 'wa' ? 'WhatsApp' : 'Instagram';
+    let txt = `RESPUESTAS AUTOMÁTICAS — ${bizName.toUpperCase()}\n`;
+    txt += `Canal: ${chName} | Tono: ${tone}\n`;
+    txt += `Generado con AutoReply IA\n`;
+    txt += '═'.repeat(50) + '\n\n';
+    results.forEach((r, i) => {
+      txt += `${i+1}. PREGUNTA:\n${r.pregunta}\n\nRESPUESTA:\n${r.respuesta}\n\n${'─'.repeat(50)}\n\n`;
+    });
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `autoreply-${bizName.toLowerCase().replace(/\s+/g,'-')}.txt`;
+    a.click();
+  }
+</script>
+
+<script>
+// ── LÍMITE DE USOS DIARIOS ──────────────────────────────────
+function getUsageKey(appId) {
+  const today = new Date().toISOString().split('T')[0];
+  return 'nico_app_' + appId + '_' + today;
+}
+function getUsageCount(appId) {
+  return parseInt(localStorage.getItem(getUsageKey(appId)) || '0');
+}
+function incrementUsage(appId) {
+  localStorage.setItem(getUsageKey(appId), (getUsageCount(appId) + 1).toString());
+}
+function checkUsageLimit(appId) {
+  if (getUsageCount(appId) >= 3) {
+    alert('Llegaste al límite de 3 usos diarios gratuitos 🙌\nVolvé mañana para seguir usando la herramienta.\n\nSeguime en @nicosanchezok para más tools de IA gratuitas.');
+    return false;
+  }
+  return true;
+}
+// ────────────────────────────────────────────────────────────
+</script>
+</body>
+</html>
