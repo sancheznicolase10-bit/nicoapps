@@ -27,7 +27,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { background: var(--bg); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
-
+ 
 /* HEADER */
 header { background: var(--ink); color: #faf8f4; padding: 18px 32px;
   display: flex; align-items: center; justify-content: space-between; }
@@ -38,10 +38,10 @@ header { background: var(--ink); color: #faf8f4; padding: 18px 32px;
 .header-badge { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
   border: 1px solid rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px;
   opacity: 0.6; }
-
+ 
 /* LAYOUT */
 .container { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
-
+ 
 /* HERO */
 .hero { margin-bottom: 48px; }
 .hero-eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
@@ -50,7 +50,7 @@ header { background: var(--ink); color: #faf8f4; padding: 18px 32px;
   font-weight: 900; line-height: 1.0; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 14px; }
 .hero h1 em { font-style: italic; color: var(--accent); }
 .hero p { font-size: 16px; color: var(--ink2); line-height: 1.65; max-width: 480px; font-weight: 300; }
-
+ 
 /* PROGRESS */
 .progress { display: flex; align-items: center; gap: 0; margin-bottom: 40px; }
 .prog-step { display: flex; align-items: center; gap: 8px; }
@@ -62,7 +62,7 @@ header { background: var(--ink); color: #faf8f4; padding: 18px 32px;
 .prog-label { font-size: 12px; color: var(--ink3); font-weight: 500; white-space: nowrap; }
 .prog-label.active { color: var(--ink); }
 .prog-line { flex: 1; height: 1px; background: var(--border2); margin: 0 12px; min-width: 20px; }
-
+ 
 /* FORM CARD */
 .form-card { background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--r); padding: 32px; margin-bottom: 24px; }
@@ -71,7 +71,7 @@ header { background: var(--ink); color: #faf8f4; padding: 18px 32px;
   color: var(--ink3); font-weight: 600; margin-bottom: 20px;
   display: flex; align-items: center; gap: 8px; }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
+ 
 /* FIELDS */
 .field { margin-bottom: 20px; }
 .field:last-child { margin-bottom: 0; }
@@ -87,7 +87,7 @@ input, textarea, select {
 input:focus, textarea:focus, select:focus { border-color: var(--accent); background: white; }
 input::placeholder, textarea::placeholder { color: var(--ink3); }
 textarea { resize: vertical; }
-
+ 
 /* OBJECTIVE PILLS */
 .obj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 10px; }
 .obj-btn { padding: 14px 16px; border-radius: 8px; border: 1.5px solid var(--border);
@@ -99,14 +99,14 @@ textarea { resize: vertical; }
 .obj-btn .obj-desc { font-size: 11px; color: var(--ink3); line-height: 1.4; }
 .obj-btn.active { border-color: var(--accent); background: var(--accent-soft); }
 .obj-btn.active .obj-name { color: var(--accent); }
-
+ 
 /* TONE */
 .tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .tone-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border);
   background: transparent; color: var(--ink2); font-family: var(--sans); font-size: 12px;
   font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .tone-btn.active { background: var(--ink); border-color: var(--ink); color: white; }
-
+ 
 /* BUTTONS */
 .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--accent);
   color: white; border: none; border-radius: 8px; padding: 15px 28px;
@@ -119,7 +119,7 @@ textarea { resize: vertical; }
   color: var(--ink2); font-family: var(--sans); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
 .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
-
+ 
 /* LOADING */
 .loading { display: none; align-items: center; gap: 16px; padding: 24px;
   background: var(--accent-soft); border-radius: var(--r); border: 1px solid var(--accent-soft2); margin-top: 16px; }
@@ -128,7 +128,7 @@ textarea { resize: vertical; }
   border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 14px; font-weight: 500; color: var(--accent); }
-
+ 
 /* RESULTS */
 #step3 { display: none; }
 .results-top { display: flex; align-items: flex-start; justify-content: space-between;
@@ -137,7 +137,7 @@ textarea { resize: vertical; }
   letter-spacing: -0.02em; line-height: 1.1; }
 .results-top h2 span { color: var(--accent); }
 .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-
+ 
 /* EMAIL CARD */
 .email-card { background: var(--surface); border: 1.5px solid var(--border);
   border-radius: var(--r); margin-bottom: 16px; overflow: hidden; transition: border-color 0.2s; }
@@ -156,7 +156,7 @@ textarea { resize: vertical; }
   background: var(--accent-soft); padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
 .email-chevron { color: var(--ink3); font-size: 12px; transition: transform 0.3s; flex-shrink: 0; }
 .email-chevron.open { transform: rotate(180deg); }
-
+ 
 .email-body { padding: 24px; display: none; }
 .email-body.open { display: block; }
 .email-field-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
@@ -176,7 +176,7 @@ textarea { resize: vertical; }
   border: 1.5px solid var(--border2); border-radius: 6px; padding: 8px 14px;
   color: var(--ink2); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .copy-all-btn:hover { border-color: var(--ink); color: var(--ink); }
-
+ 
 /* SEQUENCE TIMELINE */
 .timeline { display: flex; align-items: center; gap: 0; margin-bottom: 32px;
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
@@ -186,7 +186,7 @@ textarea { resize: vertical; }
 .tl-day { font-size: 10px; font-weight: 700; color: var(--ink3); letter-spacing: 0.08em; text-transform: uppercase; }
 .tl-label { font-size: 11px; color: var(--ink); font-weight: 500; text-align: center; line-height: 1.3; }
 .tl-line { flex: 1; height: 1px; background: var(--border2); min-width: 16px; }
-
+ 
 /* EXPORT BAR */
 .export-bar { background: var(--ink); color: white; border-radius: var(--r);
   padding: 24px 28px; display: flex; align-items: center; justify-content: space-between;
@@ -198,7 +198,7 @@ textarea { resize: vertical; }
   padding: 13px 22px; font-family: var(--sans); font-size: 14px; font-weight: 600;
   cursor: pointer; transition: background 0.2s; white-space: nowrap; }
 .btn-export:hover { background: var(--accent2); }
-
+ 
 @media (max-width: 600px) {
   .field-row { grid-template-columns: 1fr; }
   .obj-grid { grid-template-columns: 1fr 1fr; }
@@ -207,10 +207,10 @@ textarea { resize: vertical; }
   .form-card { padding: 22px; }
 }
 </style>
-
+ 
 </head>
 <body>
-
+ 
 <header>
   <div class="logo">
     <div class="logo-mark">MailFlow</div>
@@ -218,15 +218,15 @@ textarea { resize: vertical; }
   </div>
   <div class="header-badge">Gratis · Sin registro</div>
 </header>
-
+ 
 <div class="container">
-
+ 
   <div class="hero">
     <div class="hero-eyebrow">// Generador de secuencias de venta</div>
     <h1>5 emails que<br/><em>venden solos</em></h1>
     <p>Describí tu producto, elegí el objetivo y la IA escribe toda la secuencia lista para copiar y enviar.</p>
   </div>
-
+ 
   <!-- PROGRESS -->
   <div class="progress" id="progress">
     <div class="prog-step">
@@ -244,12 +244,12 @@ textarea { resize: vertical; }
       <div class="prog-label" id="pl3">Secuencia lista</div>
     </div>
   </div>
-
+ 
   <!-- STEP 1 -->
   <div id="step1">
     <div class="form-card">
       <div class="section-label">Tu producto o servicio</div>
-
+ 
       <div class="field-row">
         <div class="field">
           <label>Nombre del producto / servicio</label>
@@ -260,12 +260,12 @@ textarea { resize: vertical; }
           <input id="prodPrice" type="text" placeholder="Ej: $49.000 / $97 USD"/>
         </div>
       </div>
-
+ 
       <div class="field">
         <label>¿Qué es y qué problema resuelve? <span class="hint">(sé específico)</span></label>
         <textarea id="prodDesc" rows="3" placeholder="Ej: Un curso online de 8 semanas que enseña a emprendedores a sacarle fotos a sus productos desde el celular para vender más en Instagram y marketplaces..."></textarea>
       </div>
-
+ 
       <div class="field-row">
         <div class="field">
           <label>¿A quién le vendés?</label>
@@ -276,18 +276,18 @@ textarea { resize: vertical; }
           <input id="senderName" type="text" placeholder="Ej: Lucía, Equipo Fotoproduct"/>
         </div>
       </div>
-
+ 
       <div class="btn-row">
         <button class="btn-primary" onclick="goStep(2)">Siguiente → Estrategia</button>
       </div>
     </div>
   </div>
-
+ 
   <!-- STEP 2 -->
   <div id="step2" style="display:none">
     <div class="form-card">
       <div class="section-label">Objetivo de la secuencia</div>
-
+ 
       <div class="field" style="margin-bottom:28px;">
         <div class="obj-grid" id="objGrid">
           <button class="obj-btn active" onclick="setObj(this,'lanzamiento')">
@@ -312,7 +312,7 @@ textarea { resize: vertical; }
           </button>
         </div>
       </div>
-
+ 
       <div class="section-label">Tono de escritura</div>
       <div class="field">
         <div class="tone-row" id="toneRow">
@@ -323,12 +323,12 @@ textarea { resize: vertical; }
           <button class="tone-btn" onclick="setTone(this,'urgente y persuasivo')">Urgente</button>
         </div>
       </div>
-
+ 
       <div class="field">
         <label>¿Hay algún beneficio, bono o garantía clave? <span class="hint">(opcional)</span></label>
         <input id="bonus" type="text" placeholder="Ej: Garantía de 30 días, bono de mentoría grupal, precio especial hasta el viernes"/>
       </div>
-
+ 
       <div class="btn-row">
         <button class="btn-primary" id="genBtn" onclick="generate()">
           ✉️ Generar secuencia de 5 emails
@@ -341,51 +341,51 @@ textarea { resize: vertical; }
       </div>
     </div>
   </div>
-
+ 
   <!-- STEP 3 -->
   <div id="step3">
     <div class="results-top">
       <h2>Tu secuencia<br/><span>está lista ✓</span></h2>
       <div class="results-actions">
-        <button class="btn-ghost" onclick="exportTxt()">↓ Descargar .txt</button>
+        <button class="btn-ghost" onclick="exportTxt()">↓ Descargar .html</button>
         <button class="btn-primary" onclick="goStep(1)">+ Nueva secuencia</button>
       </div>
     </div>
-
+ 
     <!-- TIMELINE -->
     <div class="timeline" id="timeline"></div>
-
+ 
     <!-- EMAILS -->
     <div id="emailsContainer"></div>
-
+ 
     <div class="export-bar">
       <div>
         <h3>Llevate todos los emails</h3>
-        <p>Descargá la secuencia completa en un .txt listo para cargar en tu plataforma de email.</p>
+        <p>Descargá la secuencia completa en un archivo HTML listo para compartir con tu cliente.</p>
       </div>
       <button class="btn-export" onclick="exportTxt()">↓ Descargar secuencia completa</button>
     </div>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 let objective = 'lanzamiento';
 let tone = 'profesional y cercano';
 let emails = [];
-
+ 
 function setObj(btn, obj) {
   objective = obj;
   document.querySelectorAll('.obj-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-
+ 
 function setTone(btn, t) {
   tone = t;
   document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
-
+ 
 function goStep(n) {
   if (n === 2) {
     const name = document.getElementById('prodName').value.trim();
@@ -405,7 +405,7 @@ function goStep(n) {
   });
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
+ 
 function toggleEmail(i) {
   const body = document.getElementById('eb-'+i);
   const chev = document.getElementById('ec-'+i);
@@ -414,37 +414,37 @@ function toggleEmail(i) {
   chev.classList.toggle('open', !isOpen);
   chev.textContent = !isOpen ? '▲' : '▼';
 }
-
+ 
 async function generate() {
   if (!checkUsageLimit('mailflow')) return;
   incrementUsage('mailflow');
-
+ 
   const prodName = document.getElementById('prodName').value.trim();
   const prodPrice = document.getElementById('prodPrice').value.trim();
   const prodDesc = document.getElementById('prodDesc').value.trim();
   const audience = document.getElementById('audience').value.trim();
   const senderName = document.getElementById('senderName').value.trim();
   const bonus = document.getElementById('bonus').value.trim();
-
+ 
   const btn = document.getElementById('genBtn');
   const loading = document.getElementById('loadingDiv');
   btn.disabled = true;
   loading.classList.add('show');
-
+ 
   const objLabels = {
     lanzamiento: 'Lanzamiento de producto nuevo',
     nurturing: 'Nurturing / Educación de leads',
     recuperacion: 'Recuperación de leads fríos',
     urgencia: 'Urgencia y cierre de ventas'
   };
-
+ 
   const daySchedules = {
     lanzamiento: ['Día 1', 'Día 2', 'Día 4', 'Día 6', 'Día 7'],
     nurturing:   ['Día 1', 'Día 3', 'Día 7', 'Día 12', 'Día 18'],
     recuperacion:['Día 1', 'Día 3', 'Día 5', 'Día 8', 'Día 10'],
     urgencia:    ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5'],
   };
-
+ 
   const msgs = [
     'Analizando tu producto...', 'Diseñando la estructura...', 'Escribiendo asuntos que se abren...',
     'Redactando los cuerpos...', 'Puliendo los CTAs...'
@@ -453,9 +453,9 @@ async function generate() {
   const lt = setInterval(() => {
     document.getElementById('loadingText').textContent = msgs[mi % msgs.length]; mi++;
   }, 1600);
-
+ 
   const prompt = `Sos un copywriter experto en email marketing para negocios latinoamericanos. Escribís emails de venta en español que suenan humanos, persuasivos y auténticos.
-
+ 
 PRODUCTO:
 - Nombre: ${prodName}
 - Precio: ${prodPrice || 'no especificado'}
@@ -463,11 +463,11 @@ PRODUCTO:
 - Audiencia: ${audience || 'emprendedores y profesionales'}
 - Remitente: ${senderName || 'el equipo'}
 ${bonus ? `- Beneficio/Bono clave: ${bonus}` : ''}
-
+ 
 OBJETIVO DE LA SECUENCIA: ${objLabels[objective]}
 TONO: ${tone}
 DÍAS DE ENVÍO: ${daySchedules[objective].join(', ')}
-
+ 
 Escribí una secuencia de exactamente 5 emails. Cada email debe:
 1. Tener un asunto irresistible (que genere curiosidad o urgencia, máx 60 chars)
 2. Tener un propósito claro y diferente al del anterior
@@ -475,13 +475,13 @@ Escribí una secuencia de exactamente 5 emails. Cada email debe:
 4. Incluir UN solo llamado a la acción (CTA) claro al final
 5. Sonar humano, NO corporativo — como si lo escribiera una persona real
 6. Usar el nombre del producto naturalmente
-
+ 
 Para la secuencia de ${objective}:
 ${objective === 'lanzamiento' ? '- Email 1: Historia/problema que resuelve. Email 2: La solución (el producto). Email 3: Testimonios/prueba social. Email 4: Objeciones más comunes respondidas. Email 5: Última oportunidad + urgencia.' : ''}
 ${objective === 'nurturing' ? '- Email 1: Bienvenida + valor gratuito. Email 2: Tip o enseñanza útil. Email 3: Caso de éxito o historia. Email 4: El producto como solución natural. Email 5: Invitación a dar el paso.' : ''}
 ${objective === 'recuperacion' ? '- Email 1: "¿Todo bien?" — check-in personal. Email 2: Recordatorio de valor + qué se están perdiendo. Email 3: Nuevo ángulo o beneficio que no habían visto. Email 4: Oferta especial solo para ellos. Email 5: Cierre definitivo.' : ''}
 ${objective === 'urgencia' ? '- Email 1: Cuenta regresiva comienza. Email 2: Recordatorio + testimonios. Email 3: Responde la objeción principal. Email 4: Quedan pocas horas. Email 5: Última hora — cierra la oferta.' : ''}
-
+ 
 Responde ÚNICAMENTE con JSON válido, sin markdown ni backticks:
 {
   "secuencia": [
@@ -494,7 +494,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni backticks:
     }
   ]
 }`;
-
+ 
   try {
     const res = await fetch('/api/claude', {
       method: 'POST',
@@ -519,7 +519,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni backticks:
     loading.classList.remove('show');
   }
 }
-
+ 
 function renderResults() {
   // Timeline
   const tl = document.getElementById('timeline');
@@ -531,7 +531,7 @@ function renderResults() {
       <div class="tl-label">${e.proposito}</div>
     </div>
   `).join('');
-
+ 
   // Emails
   const container = document.getElementById('emailsContainer');
   container.innerHTML = emails.map((e,i) => `
@@ -561,11 +561,11 @@ function renderResults() {
       </div>
     </div>
   `).join('');
-
+ 
   // Auto-open first
   toggleEmail(0);
 }
-
+ 
 function copyEmail(i) {
   const text = `Asunto: ${emails[i].asunto}\n\n${emails[i].cuerpo}`;
   navigator.clipboard.writeText(text).then(() => {
@@ -575,15 +575,15 @@ function copyEmail(i) {
     setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copiar email completo'; }, 2000);
   });
 }
-
+ 
 function copySubject(i) {
   navigator.clipboard.writeText(emails[i].asunto);
 }
-
+ 
 function exportTxt() {
   const prodName = document.getElementById('prodName').value.trim();
   const objLabels = { lanzamiento:'Lanzamiento',nurturing:'Nurturing',recuperacion:'Recuperación',urgencia:'Urgencia/Cierre' };
-  
+ 
   let html = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -603,7 +603,7 @@ function exportTxt() {
 <body>
 <h1>Secuencia de Emails</h1>
 <div class="meta">${prodName} · ${objLabels[objective]} · Tono: ${tone} · Generado con MailFlow IA</div>`;
-
+ 
   emails.forEach(e => {
     html += `
 <div class="email">
@@ -612,21 +612,20 @@ function exportTxt() {
   <div class="email-body">${e.cuerpo}</div>
 </div>`;
   });
-
+ 
   html += `<div class="footer">Generado con MailFlow IA · @nicosanchezok</div></body></html>`;
-
+ 
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], {type: 'text/html;charset=utf-8'}));
   a.download = `mailflow-${prodName.toLowerCase().replace(/\s+/g,'-')}.html`;
   a.click();
 }
-}
-
+ 
 function escHtml(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 </script>
-
+ 
 <script>
 // ── LÍMITE DE USOS DIARIOS ──────────────────────────────────
 function getUsageKey(appId) {
@@ -641,7 +640,7 @@ function incrementUsage(appId) {
 }
 function checkUsageLimit(appId) {
   if (getUsageCount(appId) >= 5) {
-    alert('Llegaste al límite de 3 usos diarios gratuitos 🙌\nVolvé mañana para seguir usando la herramienta.\n\nSeguime en @nicosanchezok para más tools de IA gratuitas.');
+    alert('Llegaste al límite de 5 usos diarios gratuitos 🙌\nVolvé mañana para seguir usando la herramienta.\n\nSeguime en @nicosanchezok para más tools de IA gratuitas.');
     return false;
   }
   return true;
@@ -650,3 +649,4 @@ function checkUsageLimit(appId) {
 </script>
 </body>
 </html>
+ 
