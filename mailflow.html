@@ -583,21 +583,43 @@ function copySubject(i) {
 function exportTxt() {
   const prodName = document.getElementById('prodName').value.trim();
   const objLabels = { lanzamiento:'Lanzamiento',nurturing:'Nurturing',recuperacion:'Recuperación',urgencia:'Urgencia/Cierre' };
-  let txt = `SECUENCIA DE EMAILS — ${prodName.toUpperCase()}\n`;
-  txt += `Objetivo: ${objLabels[objective]} | Tono: ${tone}\n`;
-  txt += `Generado con MailFlow IA\n`;
-  txt += '═'.repeat(60) + '\n\n';
+  
+  let html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Secuencia de Emails — ${prodName}</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; padding: 0 24px; color: #1a1612; background: #faf8f4; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .meta { font-size: 13px; color: #8a8480; margin-bottom: 40px; }
+  .email { background: white; border: 1px solid #e8e3da; border-radius: 10px; padding: 28px; margin-bottom: 24px; }
+  .email-num { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: #8a8480; margin-bottom: 8px; }
+  .email-subject { font-size: 18px; font-weight: 700; color: #1a1612; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 2px solid #e8540a; }
+  .email-body { font-size: 15px; line-height: 1.8; color: #4a4540; white-space: pre-wrap; }
+  .footer { text-align: center; font-size: 12px; color: #8a8480; margin-top: 48px; }
+</style>
+</head>
+<body>
+<h1>Secuencia de Emails</h1>
+<div class="meta">${prodName} · ${objLabels[objective]} · Tono: ${tone} · Generado con MailFlow IA</div>`;
+
   emails.forEach(e => {
-    txt += `EMAIL ${e.numero} — ${e.dia.toUpperCase()} | ${e.proposito.toUpperCase()}\n`;
-    txt += '─'.repeat(60) + '\n';
-    txt += `ASUNTO: ${e.asunto}\n\n`;
-    txt += `${e.cuerpo}\n\n`;
-    txt += '═'.repeat(60) + '\n\n';
+    html += `
+<div class="email">
+  <div class="email-num">Email ${e.numero} · ${e.dia} · ${e.proposito}</div>
+  <div class="email-subject">📧 ${e.asunto}</div>
+  <div class="email-body">${e.cuerpo}</div>
+</div>`;
   });
+
+  html += `<div class="footer">Generado con MailFlow IA · @nicosanchezok</div></body></html>`;
+
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));
-  a.download = `mailflow-${prodName.toLowerCase().replace(/\s+/g,'-')}.txt`;
+  a.href = URL.createObjectURL(new Blob([html], {type: 'text/html;charset=utf-8'}));
+  a.download = `mailflow-${prodName.toLowerCase().replace(/\s+/g,'-')}.html`;
   a.click();
+}
 }
 
 function escHtml(s) {
