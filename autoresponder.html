@@ -538,22 +538,45 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni backticks:
       }, 2000);
     });
   }
+function exportTxt() {
+  const bizName = document.getElementById('bizName').value.trim();
+  const chName = channel === 'wa' ? 'WhatsApp' : 'Instagram';
 
-  function exportTxt() {
-    const bizName = document.getElementById('bizName').value.trim();
-    const chName = channel === 'wa' ? 'WhatsApp' : 'Instagram';
-    let txt = `RESPUESTAS AUTOMÁTICAS — ${bizName.toUpperCase()}\n`;
-    txt += `Canal: ${chName} | Tono: ${tone}\n`;
-    txt += `Generado con AutoReply IA\n`;
-    txt += '═'.repeat(50) + '\n\n';
-    results.forEach((r, i) => {
-      txt += `${i+1}. PREGUNTA:\n${r.pregunta}\n\nRESPUESTA:\n${r.respuesta}\n\n${'─'.repeat(50)}\n\n`;
-    });
-    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `autoreply-${bizName.toLowerCase().replace(/\s+/g,'-')}.txt`;
-    a.click();
+  let html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Respuestas Automáticas — ${bizName}</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; padding: 0 24px; color: #f0f0f0; background: #0d0d0d; }
+  h1 { font-size: 28px; margin-bottom: 4px; color: #c8f04a; }
+  .meta { font-size: 13px; color: #8a8480; margin-bottom: 40px; }
+  .card { background: #161616; border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 28px; margin-bottom: 24px; }
+  .pregunta { font-size: 13px; font-weight: 700; color: #c8f04a; margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .respuesta { font-size: 15px; line-height: 1.8; color: rgba(240,240,240,0.85); white-space: pre-wrap; border-left: 3px solid #c8f04a; padding-left: 16px; }
+  .footer { text-align: center; font-size: 12px; color: #8a8480; margin-top: 48px; }
+</style>
+</head>
+<body>
+<h1>Respuestas Automáticas</h1>
+<div class="meta">${bizName} · Canal: ${chName} · Tono: ${tone} · Generado con AutoReply IA</div>`;
+
+  results.forEach((r, i) => {
+    html += `
+<div class="card">
+  <div class="pregunta">❓ Pregunta ${i+1}: ${r.pregunta}</div>
+  <div class="respuesta">${r.respuesta}</div>
+</div>`;
+  });
+
+  html += `<div class="footer">Generado con AutoReply IA · @nicosanchezok</div></body></html>`;
+
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([html], {type: 'text/html;charset=utf-8'}));
+  a.download = `autoreply-${bizName.toLowerCase().replace(/\s+/g,'-')}.html`;
+  a.click();
+}
+ 
   }
 </script>
 
