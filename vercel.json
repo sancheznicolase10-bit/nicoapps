@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/mailflow", "dest": "/mailflow.html" },
+    { "src": "/autoresponder", "dest": "/autoresponder.html" },
+    { "src": "/api/(.*)", "dest": "/api/$1" }
+  ]
+}
